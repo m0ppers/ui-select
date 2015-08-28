@@ -254,16 +254,26 @@ uis.directive('uiSelect',
 
         // Hold on to a reference to the .ui-select-dropdown element for direction support.
         var dropdown = null,
+            searchContainer = null,
             directionUpClassName = 'direction-up';
 
         //Updates dropdown size and placement as search/filter modifies displayed list
         var itemsLength = null;
         scope.$watch('$select.items', function(items) {
           if(itemsLength != items.length && $select.open) {
+            
             dropdown = angular.element(element).querySelectorAll('.ui-select-dropdown');
+
             if (dropdown === null) {
               return;
             }
+
+            //Getting the input field container element
+            searchContainer = angular.element(element).querySelectorAll('.select2-search');
+
+            //Search input field container values
+            var searchContainerHeight = searchContainer && searchContainer.length ? (searchContainer[0].clientHeight) : 0;
+            var searchContainerMargin = searchContainer && searchContainer.length ? (searchContainer[0].offsetTop) : 0;
 
             // Hide the dropdown so there is no flicker until $timeout is done executing.
             dropdown[0].style.opacity = 0;
@@ -274,9 +284,9 @@ uis.directive('uiSelect',
               var offsetDropdown = uisOffset(dropdown);
 
               // Determine if the direction of the dropdown needs to be changed.
-              if (offset.top + offset.height + offsetDropdown.height > $document[0].documentElement.scrollTop + $document[0].documentElement.clientHeight) {
+              if (offset.top + offset.height + offsetDropdown.height + searchContainerMargin + searchContainerHeight > $document[0].documentElement.scrollTop + $document[0].documentElement.clientHeight) {
                 dropdown[0].style.position = 'absolute';
-                dropdown[0].style.top = (offsetDropdown.height * -1) + 'px';
+                dropdown[0].style.top = ((offsetDropdown.height - searchContainerMargin) * -1) + 'px';
                 element.addClass(directionUpClassName);
               }
 
