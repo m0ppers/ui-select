@@ -284,10 +284,14 @@ uis.directive('uiSelect',
               var offsetDropdown = uisOffset(dropdown);
 
               // Determine if the direction of the dropdown needs to be changed.
-              if (offset.top + offset.height + offsetDropdown.height + searchContainerMargin + searchContainerHeight > $document[0].documentElement.scrollTop + $document[0].documentElement.clientHeight) {
+              if (!element.hasClass(directionUpClassName) && 
+                (offset.top + offset.height + offsetDropdown.height + searchContainerMargin + searchContainerHeight > $document[0].documentElement.scrollTop + $document[0].documentElement.clientHeight)) {
                 dropdown[0].style.position = 'absolute';
-                dropdown[0].style.top = ((offsetDropdown.height - searchContainerMargin) * -1) + 'px';
                 element.addClass(directionUpClassName);
+              }
+
+              if (element.hasClass(directionUpClassName)) {
+                dropdown[0].style.top = ((offsetDropdown.height - searchContainerMargin) * -1) + 'px';
               }
 
               // Display the dropdown once it has been positioned.
