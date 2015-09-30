@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.12.1 - 2015-08-28T18:34:29.379Z
+ * Version: 0.12.1 - 2015-09-30T11:56:32.957Z
  * License: MIT
  */
 
@@ -1134,7 +1134,7 @@ uis.directive('uiSelectMatch', ['uiSelectConfig', function(uiSelectConfig) {
   };
 }]);
 
-uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelectMinErr, $timeout) {
+uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', '$window', function(uiSelectMinErr, $timeout, $window) {
   return {
     restrict: 'EA',
     require: ['^uiSelect', '^ngModel'],
@@ -1535,6 +1535,14 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
         });
       });
 
+      function onWindowResize() {
+        $select.sizeSearchInput();
+      }
+
+      angular.element($window).on('resize', onWindowResize);
+      scope.$on('$destroy', function() {
+        angular.element($window).off('resize', null, onWindowResize);
+      });
     }
   };
 }]);
